@@ -2,7 +2,7 @@
   "manifest_version": 1,
   "name": "hermes-feishu-display-plus",
   "version": "0.1.0",
-  "description": "Hermes Feishu display optimization pack for tool progress, status readability, structured post output, and desktop/mobile readability.",
+  "description": "飞书显示增强包。工具调用记录、三状态显示、结构化正文、桌面端和移动端可读性。",
   "license": "MIT",
   "homepage": "https://github.com/OLDBAI213/hermes-feishu-display-plus",
   "status": "local_draft",
