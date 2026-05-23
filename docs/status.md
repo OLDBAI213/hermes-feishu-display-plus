@@ -8,6 +8,9 @@
 
 ## 已有本机能力
 
+- 开始处理时即时状态：`⌛ 已收到，正在思考...`。
+- Feishu `Typing` 反应标记：处理中显示，成功后移除，失败时切换失败标记。
+- 开始状态里的小米服务商显示为 `小米 MiMo`，不再显示英文 `Xiaomi MiMo`。
 - 飞书工具记录抬头：`工具调用记录`。
 - 工具调用编号：`1.`、`2.`、`3.`。
 - 同一轮对话的工具调用聚合在一个状态栏。
@@ -33,3 +36,5 @@ powershell -ExecutionPolicy Bypass -File .\verify.ps1
 - `install.ps1`：已创建配置/源码备份，合并 `display.platforms.feishu` 配置，并执行源码替换检查。
 - 备份目录示例：`E:\AI\hermes\backups\hermes-feishu-display-plus-20260523-221329`。
 - 最新验证备份示例：`E:\AI\hermes\backups\hermes-feishu-display-plus-20260523-221923`。
+- 已补 `lark-oapi==1.5.3` 后重跑 Feishu 处理反应测试：5 通过，0 失败。
+- `verify.ps1`：16 通过，0 失败。

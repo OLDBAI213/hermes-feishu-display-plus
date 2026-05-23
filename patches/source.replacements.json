@@ -8,5 +8,10 @@
     "file": "hermes-agent/gateway/platforms/feishu.py",
     "find": "def _build_markdown_post_payload(content: str) -> str:\n    rows = _build_markdown_post_rows(content)",
     "replace": "def _build_markdown_post_payload(content: str) -> str:\n    rows = _build_markdown_post_rows(_polish_feishu_structured_text(content))"
+  },
+  {
+    "file": "hermes-agent/gateway/platforms/feishu.py",
+    "find": "        provider_label = get_auth_provider_display_name(provider) if provider else \"\"\n        if not provider_label and provider:",
+    "replace": "        provider_label = get_auth_provider_display_name(provider) if provider else \"\"\n        if provider_label == \"Xiaomi MiMo\":\n            provider_label = \"小米 MiMo\"\n        if not provider_label and provider:"
   }
 ]

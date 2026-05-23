@@ -33,6 +33,10 @@ Write-Check "Feishu adapter source exists" (Test-Path -LiteralPath $FeishuPy)
 if (Test-Path -LiteralPath $FeishuPy) {
     $source = Get-Content -LiteralPath $FeishuPy -Raw -Encoding UTF8
     Write-Check "structured post polisher exists" ($source.Contains("_polish_feishu_structured_text"))
+    Write-Check "processing start status exists" ($source.Contains("已收到，正在思考"))
+    Write-Check "processing reaction markers exist" ($source.Contains("_FEISHU_REACTION_IN_PROGRESS") -and $source.Contains("_FEISHU_REACTION_FAILURE"))
+    Write-Check "processing start hook exists" ($source.Contains("async def on_processing_start"))
+    Write-Check "processing complete hook exists" ($source.Contains("async def on_processing_complete"))
 }
 
 if (Test-Path -LiteralPath $RunPy) {
@@ -61,6 +65,8 @@ if (Test-Path -LiteralPath $RunProgressTests) {
 
 if (Test-Path -LiteralPath $FeishuTests) {
     $feishuTestsText = Get-Content -LiteralPath $FeishuTests -Raw -Encoding UTF8
+    Write-Check "immediate received/thinking status test exists" ($feishuTestsText.Contains("test_start_sends_immediate_status_message") -and $feishuTestsText.Contains("已收到，正在思考"))
+    Write-Check "typing reaction lifecycle tests exist" ($feishuTestsText.Contains("test_start_adds_typing_and_caches_reaction_id") -and $feishuTestsText.Contains("test_success_removes_typing_and_adds_nothing"))
     Write-Check "structured list readability test exists" ($feishuTestsText.Contains("test_markdown_post_polishes_split_structured_list_for_desktop_readability"))
     Write-Check "code block preservation test exists" ($feishuTestsText.Contains("test_markdown_post_polisher_does_not_rewrite_code_blocks"))
 } else {

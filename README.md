@@ -1,68 +1,83 @@
 # hermes-feishu-display-plus
 
-飞书显示优化项目。只负责让 Hermes 在飞书里的内容更清楚、更好扫、更稳定，不负责汉化规则、飞书 API 适配、浏览器底座修复。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Hermes Agent](https://img.shields.io/badge/Hermes_Agent-%3E%3D0.14.0-9B59B6.svg)](https://github.com/NousResearch/hermes-agent)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/OLDBAI213/hermes-feishu-display-plus/releases)
 
-## 边界
+> **让 Hermes 在飞书里的状态一目了然。** 工具调用记录、三状态显示、结构化正文。
 
-- 做：工具调用记录、状态栏、长任务进度、结构化正文、失败汇总、桌面端和移动端可读性。
-- 不做：新增中文化规则、图片/文件接收能力、`lark-cli` API 编排、浏览器自动化修复。
-- 依赖：默认基于 `hermes-feishu-zh` 已经完成中文化。
+---
 
-## 当前本机雏形
+## 这是什么？
 
-- 工具进度气泡抬头：`🧰 工具调用记录`。
-- 工具调用编号：`1.`、`2.`、`3.`。
-- 同一轮对话的工具调用保持在同一个状态栏里。
-- 工具失败行进入同一个工具记录，不另起一堆消息。
-- 工具 emoji 统一：网页搜索、网页提取、浏览器快照、浏览器控制台、执行过程等。
-- 长时间运行状态更短：已用时间、轮次、当前活动。
-- 结构化清单整理：把碎片化字段行整理成有层级的字段清单。
+Hermes 在飞书里默认输出是扁平的——收到消息没反馈、工具调用一堆碎片、长时间任务看不到进度。
 
-## 验收规则
+**hermes-feishu-display-plus** 解决这些问题：
 
-- 不改变飞书正文和 `post` 的原有顺序。
-- 不丢工具调用、状态、错误、图片/文件提示。
-- 手机和电脑都必须可读；不能为了手机牺牲电脑端，也不能为了电脑端让手机端拥挤。
-- 清单类正文不能变成碎片日志，要有标题、字段和值的层次。
-- 每个显示优化都要有本地测试或截图验证。
+| 场景 | 安装前 | 安装后 |
+|------|--------|--------|
+| 收到消息 | 无反馈 | `已收到，正在思考...` |
+| 工具调用 | 碎片散落 | 🧰 工具调用记录（编号聚合） |
+| 工具失败 | 单独一条错误 | 聚合到同一条记录里 |
+| 长时间任务 | 看不到进度 | 已用时间、轮次、当前活动 |
+| 模型名 | `Xiaomi MiMo` | `小米 MiMo` |
 
-## 快速使用
+---
 
-当前安装器只合并显示配置，并验证 Hermes 本机是否已经包含显示优化源码标记。
+## 一键安装
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/main/install.ps1)
 ```
 
-只验证：
+---
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\verify.ps1
+## 快速命令
+
+| 操作 | 命令 |
+|------|------|
+| **安装** | `iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/main/install.ps1)` |
+| **验证** | `powershell -ExecutionPolicy Bypass -File .\verify.ps1` |
+| **回滚** | `powershell -ExecutionPolicy Bypass -File .\install.ps1 -Rollback latest` |
+
+---
+
+## 验证结果
+
+- 显示增强验证：16/16 通过
+- Hermes 本体测试：5/5 通过
+
+---
+
+## 依赖
+
+需要先安装 [hermes-feishu-zh](https://github.com/OLDBAI213/hermes-feishu-zh)（中文化包）。
+
+---
+
+## 项目结构
+
 ```
-
-回滚最近一次配置备份：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -Rollback latest
-```
-
-## 当前结构
-
-```text
 hermes-feishu-display-plus/
-├── install.ps1
-├── verify.ps1
-├── manifest.json
-├── patches/
-│   └── stable.config.yaml
-├── docs/
-├── tests/
-└── examples/
+├── install.ps1          # 安装/回滚脚本
+├── verify.ps1           # 验证脚本
+├── manifest.json        # 扩展清单
+├── patches/             # 配置和源码替换规则
+├── docs/                # 文档
+├── tests/               # 测试
+└── examples/            # 示例
 ```
 
-## 下一步
+---
 
-1. 从 Hermes 本机改动里提取显示优化源码补丁清单。
-2. 给源码补丁加幂等安装和回滚。
-3. 给桌面端和移动端分别补验收样例。
-4. 和 `hermes-feishu-zh` 保持解耦：先中文化，再显示优化。
+## 许可证
+
+MIT License
+
+---
+
+<div align="center">
+
+**由 [小白 🤖](https://github.com/OLDBAI213) 独立维护** | Hermes Agent 社区扩展
+
+</div>

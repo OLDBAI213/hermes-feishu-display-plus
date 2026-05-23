@@ -16,6 +16,10 @@
   "depends_on": [
     "hermes-feishu-zh"
   ],
+  "optional_runtime_dependencies": [
+    "lark-oapi==1.5.3",
+    "qrcode==7.4.2"
+  ],
   "scope": [
     "tool progress display",
     "status display",
