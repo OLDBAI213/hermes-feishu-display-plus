@@ -1,0 +1,59 @@
+{
+  "manifest_version": 1,
+  "name": "hermes-feishu-display-plus",
+  "version": "0.1.0-local",
+  "description": "Hermes Feishu display optimization pack for tool progress, status readability, structured post output, and desktop/mobile readability.",
+  "license": "MIT",
+  "homepage": "https://github.com/OLDBAI213/hermes-feishu-display-plus",
+  "status": "local_draft",
+  "target": {
+    "product": "Hermes Agent",
+    "version_range": ">=0.14.0",
+    "platforms": [
+      "windows"
+    ]
+  },
+  "depends_on": [
+    "hermes-feishu-zh"
+  ],
+  "scope": [
+    "tool progress display",
+    "status display",
+    "structured post readability",
+    "desktop and mobile Feishu readability"
+  ],
+  "not_scope": [
+    "Chinese localization rules",
+    "Feishu media/file adapter behavior",
+    "browser automation fixes"
+  ],
+  "entrypoints": {
+    "install": "install.ps1",
+    "rollback": "install.ps1 -Rollback latest",
+    "verify": "verify.ps1"
+  },
+  "patches": [
+    "patches/stable.config.yaml",
+    "patches/source.replacements.json"
+  ],
+  "modifies_planned": {
+    "source": [
+      "hermes-agent/gateway/platforms/feishu.py",
+      "hermes-agent/gateway/run.py"
+    ],
+    "config": [
+      "display.platforms.feishu.tool_progress",
+      "display.platforms.feishu.tool_preview_length",
+      "display.platforms.feishu.runtime_footer"
+    ]
+  },
+  "verify": {
+    "command": "powershell -ExecutionPolicy Bypass -File .\\verify.ps1",
+    "checks": [
+      "Tool progress title marker exists",
+      "Tool progress numbering test exists",
+      "Structured post polishing marker exists",
+      "Feishu display regression tests exist"
+    ]
+  }
+}

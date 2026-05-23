@@ -1,0 +1,12 @@
+[
+  {
+    "file": "hermes-agent/gateway/run.py",
+    "find": "def _progress_text(lines: list) -> str:\n                return \"\\n\".join(str(line) for line in lines)",
+    "replace": "def _progress_text(lines: list) -> str:\n                if _feishu_zh_progress:\n                    numbered = [\n                        f\"{idx}. {str(line)}\"\n                        for idx, line in enumerate(lines, start=1)\n                    ]\n                    return \"🧰 工具调用记录\\n\" + \"\\n\".join(numbered)\n                return \"\\n\".join(str(line) for line in lines)"
+  },
+  {
+    "file": "hermes-agent/gateway/platforms/feishu.py",
+    "find": "def _build_markdown_post_payload(content: str) -> str:\n    rows = _build_markdown_post_rows(content)",
+    "replace": "def _build_markdown_post_payload(content: str) -> str:\n    rows = _build_markdown_post_rows(_polish_feishu_structured_text(content))"
+  }
+]
