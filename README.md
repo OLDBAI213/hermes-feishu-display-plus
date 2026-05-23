@@ -8,6 +8,18 @@
 
 ---
 
+## 飞书套件
+
+这是 **hermes-feishu-display-plus**，飞书套件的显示增强包。
+
+| 包 | 定位 |
+|----|------|
+| [hermes-feishu-zh](https://github.com/OLDBAI213/hermes-feishu-zh) | 中文化（基础，必装） |
+| **hermes-feishu-display-plus** | 显示增强（本包） |
+| [hermes-feishu-adapter-optimization](https://github.com/OLDBAI213/hermes-feishu-adapter-optimization) | 适配优化（图片/文件） |
+
+---
+
 ## 这是什么？
 
 Hermes 在飞书里默认输出是扁平的——收到消息没反馈、工具调用一堆碎片、长时间任务看不到进度。
