@@ -27,7 +27,7 @@ Hermes 在飞书里默认输出是扁平的——收到消息没反馈、工具�
 ## 一键安装
 
 ```powershell
-iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/main/install.ps1)
+iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/main/bootstrap.ps1)
 ```
 
 ---
@@ -36,7 +36,7 @@ iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/
 
 | 操作 | 命令 |
 |------|------|
-| **安装** | `iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/main/install.ps1)` |
+| **安装** | `iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/main/bootstrap.ps1)` |
 | **验证** | `powershell -ExecutionPolicy Bypass -File .\verify.ps1` |
 | **回滚** | `powershell -ExecutionPolicy Bypass -File .\install.ps1 -Rollback latest` |
 
