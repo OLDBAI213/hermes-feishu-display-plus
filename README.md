@@ -8,23 +8,13 @@
 
 ---
 
-## 飞书套件
+## 痛点
 
-这是 **hermes-feishu-display-plus**，飞书套件的显示增强包。
+Hermes 在飞书里默认输出是扁平的——收到消息没反馈、工具调用一堆碎片、长时间任务看不到进度。你发了一条消息，不知道 Hermes 有没有收到；它调用了哪些工具，你也不清楚；跑个长时间任务，完全看不到进展。
 
-| 包 | 定位 |
-|----|------|
-| [hermes-feishu-zh](https://github.com/OLDBAI213/hermes-feishu-zh) | 中文化（基础，必装） |
-| **hermes-feishu-display-plus** | 显示增强（本包） |
-| [hermes-feishu-adapter-optimization](https://github.com/OLDBAI213/hermes-feishu-adapter-optimization) | 适配优化（图片/文件） |
+## 解决方案
 
----
-
-## 这是什么？
-
-Hermes 在飞书里默认输出是扁平的——收到消息没反馈、工具调用一堆碎片、长时间任务看不到进度。
-
-**hermes-feishu-display-plus** 解决这些问题：
+**hermes-feishu-display-plus** 是飞书套件的显示增强包，解决这些问题：
 
 | 场景 | 安装前 | 安装后 |
 |------|--------|--------|
@@ -43,6 +33,8 @@ Hermes 在飞书里默认输出是扁平的——收到消息没反馈、工具�
 iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/main/bootstrap.ps1)
 ```
 
+**注意：** 需要先安装 [hermes-feishu-zh](https://github.com/OLDBAI213/hermes-feishu-zh)（中文化包）。
+
 ---
 
 ## 快速命令
@@ -57,14 +49,20 @@ iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/
 
 ## 验证结果
 
-- 显示增强验证：19/19 通过
+- 显示增强验证：20/20 通过
 - Hermes 显示/飞书相关测试：232 通过
 
 ---
 
-## 依赖
+## 飞书套件
 
-需要先安装 [hermes-feishu-zh](https://github.com/OLDBAI213/hermes-feishu-zh)（中文化包）。
+这是 **hermes-feishu-display-plus**，飞书套件的显示增强包。完整飞书体验需要安装套件的三个包：
+
+| 包 | 定位 | 说明 |
+|----|------|------|
+| [hermes-feishu-zh](https://github.com/OLDBAI213/hermes-feishu-zh) | 中文化 | 基础包，必装 |
+| **hermes-feishu-display-plus** | 显示增强 | 本包 |
+| [hermes-feishu-adapter-optimization](https://github.com/OLDBAI213/hermes-feishu-adapter-optimization) | 适配优化 | 图片、文件、音视频、忙碌队列 |
 
 ---
 
