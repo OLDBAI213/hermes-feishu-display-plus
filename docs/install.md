@@ -27,13 +27,10 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Rollback latest
   - `display.platforms.feishu.runtime_footer.style = zh_detailed`
 - Hermes 源码
   - `gateway/run.py`：飞书工具调用记录标题和编号。
-  - `gateway/platforms/feishu.py`：飞书 `post` 正文结构化整理入口。
+  - `gateway/platforms/feishu.py`：飞书 `post` 正文结构化整理入口、post update payload title、小米 MiMo 显示本地化。
 
 ## 当前不会修改什么
 
-- 不修改模型配置。
-- 不修改 API key。
-- 不修改飞书凭证。
 - 不修改模型配置。
 - 不修改 API key。
 - 不修改飞书凭证。

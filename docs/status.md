@@ -30,11 +30,38 @@ powershell -ExecutionPolicy Bypass -File .\verify.ps1
 - 还没有抽完整源码补丁；当前只有工具记录标题/编号和 post 结构化整理入口的最小替换。
 - 还没有桌面端和移动端截图验收样例。
 
-## 2026-05-23 本机验证
-
-- `install.ps1 -VerifyOnly`：10 通过，0 失败。
-- `install.ps1`：已创建配置/源码备份，合并 `display.platforms.feishu` 配置，并执行源码替换检查。
-- 备份目录示例：`E:\AI\hermes\backups\hermes-feishu-display-plus-20260523-221329`。
-- 最新验证备份示例：`E:\AI\hermes\backups\hermes-feishu-display-plus-20260523-221923`。
+- 备份目录示例：`$HERMES_HOME\backups\hermes-feishu-display-plus-20260523-221329`。
+- 最新验证备份示例：`$HERMES_HOME\backups\hermes-feishu-display-plus-20260523-221923`。
 - 已补 `lark-oapi==1.5.3` 后重跑 Feishu 处理反应测试：5 通过，0 失败。
 - `verify.ps1`：16 通过，0 失败。
+
+## 2026-05-24 反向审查修复：post update 回退纯文本
+
+现象：
+
+- 真实 `gateway.log` 中仍有 `Invalid post update payload rejected by API; falling back to plain text`。
+- 出口审计显示失败集中在 `edit.build -> edit.result`，也就是飞书流式编辑/工具记录更新链路。
+
+根因：
+
+- 飞书 `post` payload 没有固定写入 `title`。
+- 空行会生成空 `text` 元素，飞书 `message.update` 对这种格式拒绝。
+
+处理：
+
+- `gateway/platforms/feishu.py` 的 post payload 固定写入 `title: ""`。
+- 空 `text` 改为空格占位，避免 update 被飞书拒绝。
+- `patches/source.replacements.json` 已加入这两个源码替换，后续安装包会带上。
+- `verify.ps1` 已新增 post update payload shape 检查。
+
+验证：
+
+- `verify.ps1`：19 通过，0 失败。
+- Hermes 显示/飞书相关测试：232 通过，4 个第三方依赖 warning。
+- 适配优化完整审查：37 通过，0 失败。
+- Gateway 已重启，PID `18792`，15:01 后日志没有新的 `Invalid post update`。
+
+自省：
+
+- 之前只看 verify 和 mock fallback 会误判“显示增强没问题”。
+- 以后显示增强必须同时反查 `gateway.log` 和 `feishu-outbound.ndjson`。

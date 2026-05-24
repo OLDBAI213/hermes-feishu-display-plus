@@ -45,6 +45,23 @@ function New-Backup {
     $dir = Join-Path $HermesRoot "backups\hermes-feishu-display-plus-$stamp"
     New-Item -ItemType Directory -Force -Path $dir | Out-Null
     Copy-Item -LiteralPath (Join-Path $HermesRoot "config.yaml") -Destination (Join-Path $dir "config.yaml") -Force
+    # Also backup source files that will be patched
+    $replacementJson = Join-Path $PackageRoot "patches\source.replacements.json"
+    if (Test-Path -LiteralPath $replacementJson) {
+        $items = Get-Content -LiteralPath $replacementJson -Raw -Encoding UTF8 | ConvertFrom-Json
+        $backedUp = @{}
+        foreach ($item in $items) {
+            $target = Join-Path $HermesRoot $item.file
+            if ((Test-Path -LiteralPath $target) -and (-not $backedUp.ContainsKey($item.file))) {
+                $backupName = ($item.file -replace '[\\/]', '__') + ".bak"
+                Copy-Item -LiteralPath $target -Destination (Join-Path $dir $backupName) -Force
+                $backedUp[$item.file] = $true
+            }
+        }
+        if ($backedUp.Count -gt 0) {
+            Write-Host "  ✅ Backed up $($backedUp.Count) source files"
+        }
+    }
     return $dir
 }
 
@@ -59,6 +76,24 @@ function Restore-LatestBackup {
     if (-not (Test-Path -LiteralPath $configBackup)) { throw "Backup missing config.yaml: $($latest.FullName)" }
     Copy-Item -LiteralPath $configBackup -Destination (Join-Path $HermesRoot "config.yaml") -Force
     Write-Host "Restored config.yaml from $($latest.FullName)"
+    # Restore source files
+    $backedUp = $false
+    Get-ChildItem -LiteralPath $latest.FullName -Filter "*.bak" | ForEach-Object {
+        $backupFile = $_.FullName
+        # Extract original relative path from backup filename: e.g. "hermes-agent__gateway__run.py.bak"
+        $origRel = $_.BaseName -replace '\.bak$', ''  # base name without .bak
+        $origPath = Join-Path $HermesRoot ($origRel -replace '__', '/')
+        if (Test-Path -LiteralPath $origPath) {
+            Copy-Item -LiteralPath $backupFile -Destination $origPath -Force
+            Write-Host "Restored source: $origRel"
+            $backedUp = $true
+        }
+    }
+    if (-not $backedUp) {
+        Write-Host "No source file backups found in $($latest.FullName)"
+    } else {
+        Write-Host "Source files restored."
+    }
 }
 
 function Merge-ConfigPatch {
@@ -143,6 +178,27 @@ function Apply-Replacements {
     Write-Host "  ✅ 应用 $applied 条规则"
 }
 
+function Check-DependencyHermesFeishuZh {
+    param([string]$HermesRoot)
+    $configPath = Join-Path $HermesRoot "config.yaml"
+    if (-not (Test-Path -LiteralPath $configPath)) {
+        throw "config.yaml not found, cannot check dependency hermes-feishu-zh"
+    }
+    $config = Get-Content -LiteralPath $configPath -Raw -Encoding UTF8
+    if ($config -match 'display\.platforms\.feishu\.[a-zA-Z_]+') {
+        # Check if zh localization is configured (hermes-feishu-zh adds zh_localization)
+        if ($config -match 'language:\s*zh' -or $config -match 'zh_localization') {
+            Write-Host "  ✅ Dependency hermes-feishu-zh seems installed (zh localization found)"
+            return $true
+        }
+    }
+    Write-Host "  ⚠️ Dependency hermes-feishu-zh may not be installed!" -ForegroundColor Yellow
+    Write-Host "  Expected: display config with zh language/localization" -ForegroundColor Yellow
+    Write-Host "  This package depends on hermes-feishu-zh for Chinese Feishu integration." -ForegroundColor Yellow
+    Write-Host "  Continuing anyway, but verify.ps1 checks may fail." -ForegroundColor Yellow
+    return $false
+}
+
 $HermesHome = Resolve-HermesHome -Requested $HermesHome
 $env:HERMES_HOME = $HermesHome
 $AgentRoot = Join-Path $HermesHome "hermes-agent"
@@ -160,6 +216,9 @@ if ($Rollback) {
     & (Join-Path $PackageRoot "verify.ps1") -HermesHome $HermesHome
     exit $LASTEXITCODE
 }
+
+Write-Step "Dependency check"
+Check-DependencyHermesFeishuZh -HermesRoot $HermesHome
 
 Write-Step "Backup"
 $backup = New-Backup -HermesRoot $HermesHome

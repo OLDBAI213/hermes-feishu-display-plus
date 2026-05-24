@@ -13,9 +13,11 @@
 - Added source replacement for Feishu start-status provider display: `Xiaomi MiMo` -> `小米 MiMo`.
 - Added `verify.ps1` to check current Hermes display optimization markers.
 - Added install, upgrade, troubleshooting, validation, and status docs.
+- Added validation for Feishu `post` update payload shape: title must be present and text elements must not be empty, preventing `message.update` fallback to plain text.
 
 ### Verified
 
 - `verify.ps1`: 10 passed, 0 failed on the current local Hermes installation.
 - `install.ps1`: created a config/source backup, merged `display.platforms.feishu`, checked/applied source replacements, and passed verification.
 - Feishu processing reaction/status targeted tests: 5 passed, 0 failed after installing `lark-oapi==1.5.3`.
+- Feishu post payload shape targeted tests: 4 passed, 0 failed.

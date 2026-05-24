@@ -32,6 +32,7 @@ Hermes 在飞书里默认输出是扁平的——收到消息没反馈、工具�
 | 工具调用 | 碎片散落 | 🧰 工具调用记录（编号聚合） |
 | 工具失败 | 单独一条错误 | 聚合到同一条记录里 |
 | 长时间任务 | 看不到进度 | 已用时间、轮次、当前活动 |
+| 流式编辑 | `post update` 失败后退回纯文本 | `post` payload 结构符合飞书更新要求 |
 | 模型名 | `Xiaomi MiMo` | `小米 MiMo` |
 
 ---
@@ -56,8 +57,8 @@ iex (irm https://raw.githubusercontent.com/OLDBAI213/hermes-feishu-display-plus/
 
 ## 验证结果
 
-- 显示增强验证：16/16 通过
-- Hermes 本体测试：5/5 通过
+- 显示增强验证：19/19 通过
+- Hermes 显示/飞书相关测试：232 通过
 
 ---
 

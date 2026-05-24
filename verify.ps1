@@ -37,6 +37,9 @@ if (Test-Path -LiteralPath $FeishuPy) {
     Write-Check "processing reaction markers exist" ($source.Contains("_FEISHU_REACTION_IN_PROGRESS") -and $source.Contains("_FEISHU_REACTION_FAILURE"))
     Write-Check "processing start hook exists" ($source.Contains("async def on_processing_start"))
     Write-Check "processing complete hook exists" ($source.Contains("async def on_processing_complete"))
+    Write-Check "post payload has title for Feishu update" ($source.Contains('"title": ""') -and $source.Contains('"content": rows'))
+    Write-Check "post text elements avoid empty strings" ($source.Contains('text if text else " "'))
+    Write-Check "Xiaomi MiMo display optimization exists" ($source.Contains("小米 MiMo") -and $source.Contains("Xiaomi MiMo"))
 }
 
 if (Test-Path -LiteralPath $RunPy) {
@@ -69,6 +72,7 @@ if (Test-Path -LiteralPath $FeishuTests) {
     Write-Check "typing reaction lifecycle tests exist" ($feishuTestsText.Contains("test_start_adds_typing_and_caches_reaction_id") -and $feishuTestsText.Contains("test_success_removes_typing_and_adds_nothing"))
     Write-Check "structured list readability test exists" ($feishuTestsText.Contains("test_markdown_post_polishes_split_structured_list_for_desktop_readability"))
     Write-Check "code block preservation test exists" ($feishuTestsText.Contains("test_markdown_post_polisher_does_not_rewrite_code_blocks"))
+    Write-Check "post update payload shape tests exist" ($feishuTestsText.Contains("test_build_post_payload_never_emits_empty_text_elements") -and $feishuTestsText.Contains('self.assertIn("title", parsed["zh_cn"])'))
 } else {
     Write-Check "structured post tests exist" $false
 }
