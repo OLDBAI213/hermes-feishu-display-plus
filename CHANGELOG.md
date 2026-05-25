@@ -4,7 +4,9 @@
 
 ### 修复
 - 新增依赖预检（安装前检查 hermes-feishu-zh 是否已装）
+- 修复飞书工具记录编辑失败时降级发送裸露工具行的问题
 - verify.ps1 新增小米 MiMo 检查项
+- verify.ps1 新增工具进度碎片气泡回归检查
 - 回滚逻辑完善（同时恢复源码文件）
 - 更新过时文档（patches/README、troubleshooting、install）
 - 修正 LICENSE 版权方

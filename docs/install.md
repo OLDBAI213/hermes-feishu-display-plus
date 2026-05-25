@@ -25,6 +25,8 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Rollback latest
   - `display.platforms.feishu.tool_preview_length = 120`
   - `display.platforms.feishu.streaming = true`
   - `display.platforms.feishu.runtime_footer.style = zh_detailed`
+
+说明：工具调用记录由 `display.platforms.feishu.tool_progress` 控制。
 - Hermes 源码
   - `gateway/run.py`：飞书工具调用记录标题和编号。
   - `gateway/platforms/feishu.py`：飞书 `post` 正文结构化整理入口、post update payload title、小米 MiMo 显示本地化。

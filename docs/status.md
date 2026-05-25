@@ -15,6 +15,7 @@
 - 工具调用编号：`1.`、`2.`、`3.`。
 - 同一轮对话的工具调用聚合在一个状态栏。
 - 失败工具进入同一个状态栏。
+- 飞书工具记录编辑失败时，不再降级发送裸露工具行。
 - 结构化正文清单整理，避免桌面端显示成碎片日志。
 - 保留代码块，不改写 fenced code block。
 - 已有最小源码替换补丁：`patches/source.replacements.json`。
@@ -65,3 +66,21 @@ powershell -ExecutionPolicy Bypass -File .\verify.ps1
 
 - 之前只看 verify 和 mock fallback 会误判“显示增强没问题”。
 - 以后显示增强必须同时反查 `gateway.log` 和 `feishu-outbound.ndjson`。
+
+## 2026-05-24 反向审查修复：工具进度碎片气泡
+
+现象：
+
+- 飞书里出现裸露的 `写入文件`、`待办`、`终端` 等单独气泡。
+- 这些不是模型正文，而是工具记录编辑失败后的降级发送。
+
+根因：
+
+- `gateway/run.py` 在编辑已有工具记录失败时，会调用 `adapter.send(content=msg)` 单独发送当前工具行。
+- 飞书 `post update` 偶发失败后，这个降级分支会把工具记录拆成多个永久气泡。
+
+处理：
+
+- 飞书平台编辑工具记录失败时，禁止降级发送裸露工具行。
+- 新增回归测试 `test_feishu_edit_failure_does_not_send_standalone_tool_lines`。
+- `patches/source.replacements.json` 已同步该修复。

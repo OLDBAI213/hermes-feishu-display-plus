@@ -23,12 +23,20 @@ $RunPy = Join-Path $AgentRoot "gateway\run.py"
 $ProgressTests = Join-Path $AgentRoot "tests\gateway\test_feishu_zh_progress.py"
 $RunProgressTests = Join-Path $AgentRoot "tests\gateway\test_run_progress_topics.py"
 $FeishuTests = Join-Path $AgentRoot "tests\gateway\test_feishu.py"
+$StableConfig = Join-Path $PSScriptRoot "patches\stable.config.yaml"
 
 Write-Host "hermes-feishu-display-plus local verification"
 Write-Host "HERMES_HOME: $HermesHome"
 
 Write-Check "Hermes agent root exists" (Test-Path -LiteralPath $AgentRoot)
 Write-Check "Feishu adapter source exists" (Test-Path -LiteralPath $FeishuPy)
+
+if (Test-Path -LiteralPath $StableConfig) {
+    $stableConfigText = Get-Content -LiteralPath $StableConfig -Raw -Encoding UTF8
+    Write-Check "stable config keeps Feishu tool progress enabled" ($stableConfigText.Contains("tool_progress: all"))
+} else {
+    Write-Check "stable config exists" $false
+}
 
 if (Test-Path -LiteralPath $FeishuPy) {
     $source = Get-Content -LiteralPath $FeishuPy -Raw -Encoding UTF8
@@ -46,6 +54,7 @@ if (Test-Path -LiteralPath $RunPy) {
     $runSource = Get-Content -LiteralPath $RunPy -Raw -Encoding UTF8
     Write-Check "tool progress title marker exists" ($runSource.Contains("工具调用记录"))
     Write-Check "tool progress numbering source exists" ($runSource.Contains("numbered =") -and $runSource.Contains("enumerate(lines, start=1)"))
+    Write-Check "Feishu progress edit failure suppresses standalone lines" ($runSource.Contains("Progress edit failed; suppressing standalone fallback line"))
 } else {
     Write-Check "gateway run source exists" $false
 }
@@ -61,9 +70,11 @@ if (Test-Path -LiteralPath $RunProgressTests) {
     $runProgress = Get-Content -LiteralPath $RunProgressTests -Raw -Encoding UTF8
     Write-Check "failed tool line aggregation test exists" ($runProgress.Contains("test_feishu_zh_progress_appends_failed_tool_line"))
     Write-Check "progress title/numbering tests exist" ($runProgress.Contains("工具调用记录") -and $runProgress.Contains("1. "))
+    Write-Check "edit failure no-fragment regression test exists" ($runProgress.Contains("test_feishu_edit_failure_does_not_send_standalone_tool_lines"))
 } else {
     Write-Check "failed tool line aggregation test exists" $false
     Write-Check "progress title/numbering tests exist" $false
+    Write-Check "edit failure no-fragment regression test exists" $false
 }
 
 if (Test-Path -LiteralPath $FeishuTests) {

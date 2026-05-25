@@ -23,5 +23,15 @@
     "file": "hermes-agent/gateway/platforms/feishu.py",
     "find": "        provider_label = get_auth_provider_display_name(provider) if provider else \"\"\n        if not provider_label and provider:",
     "replace": "        provider_label = get_auth_provider_display_name(provider) if provider else \"\"\n        if provider_label == \"Xiaomi MiMo\":\n            provider_label = \"小米 MiMo\"\n        if not provider_label and provider:"
+  },
+  {
+    "file": "hermes-agent/gateway/run.py",
+    "find": "                            # Transient network errors (ConnectError, timeouts)\n                            # must not permanently disable progress-message",
+    "replace": "                            if platform_key == \"feishu\":\n                                logger.warning(\n                                    \"[Feishu] Progress edit failed; suppressing standalone fallback line\"\n                                )\n                                continue\n                            # Transient network errors (ConnectError, timeouts)\n                            # must not permanently disable progress-message"
+  },
+  {
+    "file": "hermes-agent/gateway/run.py",
+    "find": "                        else:\n                            # Editing unsupported: send just this line\n                            result = await adapter.send(",
+    "replace": "                        else:\n                            if platform_key == \"feishu\":\n                                continue\n                            # Editing unsupported: send just this line\n                            result = await adapter.send("
   }
 ]
