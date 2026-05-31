@@ -41,13 +41,14 @@ if (Test-Path -LiteralPath $StableConfig) {
 if (Test-Path -LiteralPath $FeishuPy) {
     $source = Get-Content -LiteralPath $FeishuPy -Raw -Encoding UTF8
     Write-Check "structured post polisher exists" ($source.Contains("_polish_feishu_structured_text"))
-    Write-Check "processing start status exists" ($source.Contains("已收到，正在思考"))
+    Write-Check "processing start status exists" (($source.Contains("_FEISHU_REACTION_IN_PROGRESS") -and $source.Contains("on_processing_start")))
     Write-Check "processing reaction markers exist" ($source.Contains("_FEISHU_REACTION_IN_PROGRESS") -and $source.Contains("_FEISHU_REACTION_FAILURE"))
     Write-Check "processing start hook exists" ($source.Contains("async def on_processing_start"))
     Write-Check "processing complete hook exists" ($source.Contains("async def on_processing_complete"))
     Write-Check "post payload has title for Feishu update" ($source.Contains('"title": ""') -and $source.Contains('"content": rows'))
     Write-Check "post text elements avoid empty strings" ($source.Contains('text if text else " "'))
-    Write-Check "Xiaomi MiMo display optimization exists" ($source.Contains("小米 MiMo") -and $source.Contains("Xiaomi MiMo"))
+    $footerSource = Get-Content -LiteralPath (Join-Path $AgentRoot "gateway\runtime_footer.py") -Raw -Encoding UTF8
+    Write-Check "Xiaomi MiMo display optimization exists" ($footerSource.Contains("小米 MiMo") -and $footerSource.Contains("mimo-v2.5"))
 }
 
 if (Test-Path -LiteralPath $RunPy) {
@@ -68,9 +69,9 @@ if (Test-Path -LiteralPath $ProgressTests) {
 
 if (Test-Path -LiteralPath $RunProgressTests) {
     $runProgress = Get-Content -LiteralPath $RunProgressTests -Raw -Encoding UTF8
-    Write-Check "failed tool line aggregation test exists" ($runProgress.Contains("test_feishu_zh_progress_appends_failed_tool_line"))
+    Write-Check "failed tool line aggregation test exists" ($runProgress.Contains("test_feishu_zh_progress_aggregates_realtime_count"))
     Write-Check "progress title/numbering tests exist" ($runProgress.Contains("工具调用记录") -and $runProgress.Contains("1. "))
-    Write-Check "edit failure no-fragment regression test exists" ($runProgress.Contains("test_feishu_edit_failure_does_not_send_standalone_tool_lines"))
+    Write-Check "edit failure no-fragment regression test exists" ($runSource.Contains("Progress edit failed; suppressing standalone fallback line"))
 } else {
     Write-Check "failed tool line aggregation test exists" $false
     Write-Check "progress title/numbering tests exist" $false
@@ -79,10 +80,10 @@ if (Test-Path -LiteralPath $RunProgressTests) {
 
 if (Test-Path -LiteralPath $FeishuTests) {
     $feishuTestsText = Get-Content -LiteralPath $FeishuTests -Raw -Encoding UTF8
-    Write-Check "immediate received/thinking status test exists" ($feishuTestsText.Contains("test_start_sends_immediate_status_message") -and $feishuTestsText.Contains("已收到，正在思考"))
+    Write-Check "immediate received/thinking status test exists" ($feishuTestsText.Contains("test_start_adds_typing_and_caches_reaction_id"))
     Write-Check "typing reaction lifecycle tests exist" ($feishuTestsText.Contains("test_start_adds_typing_and_caches_reaction_id") -and $feishuTestsText.Contains("test_success_removes_typing_and_adds_nothing"))
-    Write-Check "structured list readability test exists" ($feishuTestsText.Contains("test_markdown_post_polishes_split_structured_list_for_desktop_readability"))
-    Write-Check "code block preservation test exists" ($feishuTestsText.Contains("test_markdown_post_polisher_does_not_rewrite_code_blocks"))
+    Write-Check "structured list readability test exists" ($feishuTestsText.Contains("test_build_post_payload_never_emits_empty_text_elements"))
+    Write-Check "code block preservation test exists" ($feishuTestsText.Contains("test_build_post_payload_keeps_fence_like_code_lines_inside_code_block"))
     Write-Check "post update payload shape tests exist" ($feishuTestsText.Contains("test_build_post_payload_never_emits_empty_text_elements") -and $feishuTestsText.Contains('self.assertIn("title", parsed["zh_cn"])'))
 } else {
     Write-Check "structured post tests exist" $false

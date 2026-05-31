@@ -5,7 +5,7 @@
   "description": "飞书显示增强包。工具调用记录、三状态显示、结构化正文、桌面端和移动端可读性。",
   "license": "MIT",
   "homepage": "https://github.com/OLDBAI213/hermes-feishu-display-plus",
-  "status": "local_draft",
+  "status": "compatible_on_local_hermes_0.15.1",
   "target": {
     "product": "Hermes Agent",
     "version_range": ">=0.14.0",

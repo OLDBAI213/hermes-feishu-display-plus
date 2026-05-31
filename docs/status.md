@@ -2,6 +2,18 @@
 
 日期：2026-05-23
 
+## 2026-05-29 复审
+
+当前 Hermes 源码是 `E:\AI\hermes\hermes-agent`，版本 `Hermes Agent v0.15.1 (2026.5.29)`。
+
+复审结果：
+
+- `pwsh -ExecutionPolicy Bypass -File E:\AI\github\hermes-feishu-display-plus\verify.ps1 -HermesHome E:\AI\hermes -SkipGatewayStatus`：23 通过，0 失败。
+- 已适配：结构化 post、Typing 反应标记、post update payload `title`/空 text 保护、工具记录标题、工具记录编号、飞书编辑失败不再降级发送裸工具行、小米 MiMo 中文显示、实时工具调用次数。
+- 已补到 Hermes 主仓：`gateway/run.py` 中飞书中文工具进度的首次发送和后续编辑都走同一个 `工具调用记录 + 编号` 格式；测试为 `tests/gateway/test_run_progress_topics.py::test_feishu_zh_progress_aggregates_realtime_count`。
+
+结论：本项目在老白本机 Hermes v0.15.1 上等级 B。还缺真实飞书 PC/手机截图验收，不能标 A。
+
 ## 状态
 
 本项目是本地草稿项目，已经具备项目结构、本机验证入口和配置层安装器。
