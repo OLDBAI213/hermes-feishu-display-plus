@@ -10,7 +10,7 @@ jobs:
   verify:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup PowerShell
         uses: Amadevus/pwsh-script@v2
